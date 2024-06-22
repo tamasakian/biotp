@@ -1,0 +1,10 @@
+## ignore all
+*
+
+## do not ignore files
+!/README.md
+!/.gitignore
+
+## do not ignore files in dirs
+!/biotp/
+!/biotp/*.py
