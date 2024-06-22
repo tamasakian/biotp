@@ -4,6 +4,7 @@
 ## do not ignore files
 !/README.md
 !/.gitignore
+!/setup.py
 
 ## do not ignore files in dirs
 !/biotp/
