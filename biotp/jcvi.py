@@ -10,6 +10,23 @@ def output_blocks(filename):
                 blocks_list.append(block_dict)
                 print(block_dict['id'], *blocks)
 
+def output_longest_one_to_one_microsynteny(refbed, qrybed, blocks_filename, output_filename):
+    gene_dict = {}
+    for bed in [refbed, qrybed]:
+        with open(bed, 'r') as handle:
+            for line in handle: 
+                li = line.strip().split('\t')
+                gene = li[3]
+                seqid = li[0]
+                gene_dict[gene] = seqid
+    pd.read_csv(blocks_filename, sep='\t', header=None, names=['ref', 'qry1']) \
+        .pipe(lambda df: df[(df['ref'] != '.') & (df['qry1'] != '.')]) \
+        .pipe(lambda df: df.assign(
+            ref=df['ref'].map(gene_dict),
+            qry1=df['qry1'].map(gene_dict))) \
+        .value_counts() \
+        .to_csv(output_filename, header=['count'])
+
 def output_longest_one_to_two_microsynteny(refbed, qrybed, blocks_filename, output_filename):
     gene_dict = {}
     for bed in [refbed, qrybed]:
@@ -20,7 +37,7 @@ def output_longest_one_to_two_microsynteny(refbed, qrybed, blocks_filename, outp
                 seqid = li[0]
                 gene_dict[gene] = seqid
     pd.read_csv(blocks_filename, sep='\t', header=None, names=['ref', 'qry1', 'qry2']) \
-        .pipe(lambda df: df[(df['ref'] != '.') & (df['qry2'] != '.')]) \
+        .pipe(lambda df: df[(df['ref'] != '.') & (df['qry1'] != '.') & (df['qry2'] != '.')]) \
         .pipe(lambda df: df.assign(
             ref=df['ref'].map(gene_dict),
             qry1=df['qry1'].map(gene_dict),
@@ -38,7 +55,7 @@ def output_longest_one_to_three_microsynteny(refbed, qrybed, blocks_filename, ou
                 seqid = li[0]
                 gene_dict[gene] = seqid
     pd.read_csv(blocks_filename, sep='\t', header=None, names=['ref', 'qry1', 'qry2', 'qry3']) \
-        .pipe(lambda df: df[(df['ref'] != '.') & (df['qry2'] != '.') & (df['qry3'] != '.')]) \
+        .pipe(lambda df: df[(df['ref'] != '.') & (df['qry1'] != '.') & (df['qry2'] != '.') & (df['qry3'] != '.')]) \
         .pipe(lambda df: df.assign(
             ref=df['ref'].map(gene_dict),
             qry1=df['qry1'].map(gene_dict),
