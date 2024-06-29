@@ -24,8 +24,7 @@ def output_longest_one_to_two_microsynteny(refbed, qrybed, blocks_filename, outp
         .pipe(lambda df: df.assign(
             ref=df['ref'].map(gene_dict),
             qry1=df['qry1'].map(gene_dict),
-            qry2=df['qry2'].map(gene_dict)
-        )) \
+            qry2=df['qry2'].map(gene_dict))) \
         .value_counts() \
         .to_csv(output_filename, header=['count'])
     # df_blocks = pd.read_csv(blocks_filename, sep='\t', header=None, names=['ref', 'qry1', 'qry2'])
@@ -35,6 +34,25 @@ def output_longest_one_to_two_microsynteny(refbed, qrybed, blocks_filename, outp
     # df_seqids['qry1'] = df_blocks_filtered['qry1'].map(gene_dict)
     # df_seqids['qry2'] = df_blocks_filtered['qry2'].map(gene_dict)
     # df_seqids.value_counts().to_csv(output_filename, header=['count'])
+
+def output_longest_one_to_three_microsynteny(refbed, qrybed, blocks_filename, output_filename):
+    gene_dict = {}
+    for bed in [refbed, qrybed]:
+        with open(bed, 'r') as handle:
+            for line in handle: 
+                li = line.strip().split('\t')
+                gene = li[3]
+                seqid = li[0]
+                gene_dict[gene] = seqid
+    pd.read_csv(blocks_filename, sep='\t', header=None, names=['ref', 'qry1', 'qry2', 'qry3']) \
+        .pipe(lambda df: df[(df['ref'] != '.') & (df['qry2'] != '.') & (df['qry3'] != '.')]) \
+        .pipe(lambda df: df.assign(
+            ref=df['ref'].map(gene_dict),
+            qry1=df['qry1'].map(gene_dict),
+            qry2=df['qry2'].map(gene_dict),
+            qry3=df['qry3'].map(gene_dict))) \
+        .value_counts() \
+        .to_csv(output_filename, header=['count'])
 
 def output_besthit_one_to_two_microsynteny(refbed, qrybed, blocks_filename, anchors_filename, output_filename):
     gene_dict = {}
