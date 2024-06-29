@@ -27,13 +27,6 @@ def output_longest_one_to_two_microsynteny(refbed, qrybed, blocks_filename, outp
             qry2=df['qry2'].map(gene_dict))) \
         .value_counts() \
         .to_csv(output_filename, header=['count'])
-    # df_blocks = pd.read_csv(blocks_filename, sep='\t', header=None, names=['ref', 'qry1', 'qry2'])
-    # df_blocks_filtered = df_blocks[(df_blocks['ref'] != '.') & (df_blocks['qry2'] != '.')]
-    # df_seqids = df_blocks_filtered.copy()
-    # df_seqids['ref'] = df_blocks_filtered['ref'].map(gene_dict)
-    # df_seqids['qry1'] = df_blocks_filtered['qry1'].map(gene_dict)
-    # df_seqids['qry2'] = df_blocks_filtered['qry2'].map(gene_dict)
-    # df_seqids.value_counts().to_csv(output_filename, header=['count'])
 
 def output_longest_one_to_three_microsynteny(refbed, qrybed, blocks_filename, output_filename):
     gene_dict = {}
