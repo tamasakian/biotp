@@ -36,7 +36,6 @@ functions = {
     'slice_lines_by_seqids': gff.slice_lines_by_seqids,
     'output_seqid_strand_locs_by_pepid': gff.output_seqid_strand_locs_by_pepid,
     'generate_coordinate_all_introns': gff.generate_coordinate_all_introns,
-    'export_lengths_counts_of_gene_exon_intron': gff.export_lengths_counts_of_gene_exon_intron,
     'output_blocks': jcvi.output_blocks,
     'output_longest_one_to_one_microsynteny': jcvi.output_longest_one_to_one_microsynteny,
     'output_longest_one_to_two_microsynteny': jcvi.output_longest_one_to_two_microsynteny,
