@@ -125,4 +125,35 @@ def remove_n_from_seqs(input_filename, output_filename):
     with open(output_filename, mode='w') as output_handle:
         SeqIO.write(output_records, output_handle, 'fasta')
 
+def generate_all_introns(input_filename_1, input_filename_2, output_filename):
+    introns = []
+
+    with open(input_filename_2, 'r') as gff_handle:
+        for line in gff_handle:
+            if line.startswith('#'):
+                continue
+            li = line.strip().split('\t')
+            if len(li) != 9:
+                continue
+            seqid, src, kind, start, end, score, strand, phase, attributes = li
+            if kind == 'intron':
+                attr_dict = {}
+                for attr in attributes.split(';'):
+                    key, value = attr.split('=')
+                    attr_dict[key] = value
+                intron_id = attr_dict.get('intron_id')
+                protein_id = attr_dict.get('protein_id')
+                introns.append((seqid, int(start), int(end), intron_id, protein_id, strand))
+    
+    genome = SeqIO.to_dict(SeqIO.parse(input_filename_1, "fasta"))
+
+    with open(output_filename, 'w') as output_handle:
+        for intron in introns:
+            seqid, start, end, intron_id, protein_id, strand = intron
+            if seqid in genome:
+                intron_seq = genome[seqid].seq[start-1:end]
+                if strand == '-':
+                    intron_seq = intron_seq.reverse_complement()
+                output_handle.write(f">{intron_id}\n{intron_seq}\n")
+
 
