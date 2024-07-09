@@ -65,27 +65,36 @@ def generate_coordinate_all_introns(input_filename, output_filename):
                     'start': start, 
                     'end': end, 
                     'strand': strand, 
-                    'protein_id': [],
+                    'protein_id': set(),
                     'exons': []
                 }
 
             ## exon line
             elif kind == 'exon':
                 exon_id = attr_dict['locus_tag']
+                if exon_id not in genes:
+                    continue
                 genes[exon_id]['exons'].append((start, end))
 
             ## CDS line
             elif kind == 'CDS':
                 cds_id = attr_dict['locus_tag']
+                if cds_id not in genes:
+                    continue
                 protein_id = attr_dict['protein_id']
-                genes[cds_id]['protein_id'].append(protein_id)
+                genes[cds_id]['protein_id'].add(protein_id)
 
     with open(output_filename, 'w') as output_handle:
         for gene_id, gene_info in genes.items():
-            exons = [exon for exon in gene_info['exons']]
-            exons.sort()
-            for j in range(len(exons) - 1):
-                intron_start = exons[j][1] + 1
-                intron_end = exons[j+1][0] - 1
-                if intron_start < intron_end:
-                    output_handle.write(f"{gene_info['seq']}\t{gene_info['src']}\tintron\t{intron_start}\t{intron_end}\t.\t{gene_info['strand']}\t.\tprotein_id={gene_info['protein_id'][0]};intron_id={gene_info['protein_id'][0]}_intron_{j+1}\n")
+            exons = sorted(gene_info['exons'])
+            if len(gene_info['protein_id']) != 1:
+                continue
+            for protein_id in gene_info['protein_id']:
+                intron_count = 1
+                for j in range(len(exons) - 1):
+                    intron_start = exons[j][1] + 1
+                    intron_end = exons[j+1][0] - 1
+                    if intron_start < intron_end:
+                        intron_id = f"{protein_id}_intron_{intron_count}"
+                        output_handle.write(f"{gene_info['seq']}\t{gene_info['src']}\tintron\t{intron_start}\t{intron_end}\t.\t{gene_info['strand']}\t.\tprotein_id={protein_id};intron_id={intron_id}\n")
+                        intron_count += 1
