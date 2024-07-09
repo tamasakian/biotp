@@ -56,38 +56,81 @@ def generate_coordinate_all_introns(input_filename, output_filename):
                 key, value = attr.split('=')
                 attr_dict[key] = value
 
-            ## gene line
-            if kind == 'gene':
-                gene_id = attr_dict['locus_tag']
-                genes[gene_id] = {
-                    'seq': seqid,
-                    'src': src,
-                    'start': start, 
-                    'end': end, 
-                    'strand': strand, 
-                    'protein_id': set(),
-                    'exons': []
-                }
-
-            ## exon line
-            elif kind == 'exon':
-                exon_id = attr_dict['locus_tag']
-                if exon_id not in genes:
+            ## for Gnomon
+            if src == 'Gnomon':
+                
+                ## gene is used as a common ID
+                if 'gene' not in attr_dict:
                     continue
-                genes[exon_id]['exons'].append((start, end))
 
-            ## CDS line
-            elif kind == 'CDS':
-                cds_id = attr_dict['locus_tag']
-                if cds_id not in genes:
+                if kind == 'gene':
+                    gene_id = attr_dict['gene']
+                    genes[gene_id] = {
+                        'seq': seqid,
+                        'src': src,
+                        'start': start, 
+                        'end': end, 
+                        'strand': strand, 
+                        'protein_id': set(),
+                        'exons': []
+                    }
+
+                ## exon line
+                elif kind == 'exon':
+                    exon_id = attr_dict['gene']
+                    if exon_id not in genes:
+                        continue
+                    genes[exon_id]['exons'].append((start, end))
+
+                ## CDS line
+                elif kind == 'CDS':
+                    cds_id = attr_dict['gene']
+                    if cds_id not in genes:
+                        continue
+                    protein_id = attr_dict['protein_id']
+                    genes[cds_id]['protein_id'].add(protein_id)
+
+                
+
+            else:
+
+                ## locus_tag is used as a common ID
+                if 'locus_tag' not in attr_dict:
                     continue
-                protein_id = attr_dict['protein_id']
-                genes[cds_id]['protein_id'].add(protein_id)
+
+                ## gene
+                if kind == 'gene':
+                    gene_id = attr_dict['locus_tag']
+                    genes[gene_id] = {
+                        'seq': seqid,
+                        'src': src,
+                        'start': start, 
+                        'end': end, 
+                        'strand': strand, 
+                        'protein_id': set(),
+                        'exons': []
+                    }
+
+                ## exon
+                elif kind == 'exon':
+                    exon_id = attr_dict['locus_tag']
+                    if exon_id not in genes:
+                        continue
+                    genes[exon_id]['exons'].append((start, end))
+
+                ## CDS
+                elif kind == 'CDS':
+                    cds_id = attr_dict['locus_tag']
+                    if cds_id not in genes:
+                        continue
+                    protein_id = attr_dict['protein_id']
+                    genes[cds_id]['protein_id'].add(protein_id)
 
     with open(output_filename, 'w') as output_handle:
         for gene_id, gene_info in genes.items():
             exons = sorted(gene_info['exons'])
             if len(gene_info['protein_id']) != 1:
+                ## strange
                 continue
             for protein_id in gene_info['protein_id']:
                 intron_count = 1
