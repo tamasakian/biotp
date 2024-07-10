@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 
 def slice_lines_by_seqids(input_filename, output_filename, *seqids):
     with open(input_filename, mode='r') as input_handle, open(output_filename, 'w') as output_handle:
@@ -75,22 +76,20 @@ def generate_coordinate_all_introns(input_filename, output_filename):
                         'exons': []
                     }
 
-                ## exon line
+                ## exon
                 elif kind == 'exon':
                     exon_id = attr_dict['gene']
                     if exon_id not in genes:
                         continue
                     genes[exon_id]['exons'].append((start, end))
 
-                ## CDS line
+                ## CDS
                 elif kind == 'CDS':
                     cds_id = attr_dict['gene']
                     if cds_id not in genes:
                         continue
                     protein_id = attr_dict['protein_id']
                     genes[cds_id]['protein_id'].add(protein_id)
-
-                
 
             else:
 
@@ -141,3 +140,43 @@ def generate_coordinate_all_introns(input_filename, output_filename):
                         intron_id = f"{protein_id}_intron_{intron_count}"
                         output_handle.write(f"{gene_info['seq']}\t{gene_info['src']}\tintron\t{intron_start}\t{intron_end}\t.\t{gene_info['strand']}\t.\tprotein_id={protein_id};intron_id={intron_id}\n")
                         intron_count += 1
+
+def make_dict_pepid(input_filename, output_filename, kind_p, key_p, pattern):
+    genes = {}
+
+    with open(input_filename, 'r') as input_handle:
+        for line in input_handle:
+            if line.startswith('#'):
+                continue
+            li = line.strip().split('\t')
+            if len(li) != 9:
+                continue
+            seqid, src, kind, start, end, score, strand, phase, attributes = li
+            if kind != kind_p:
+                continue
+
+            attr_dict = {}
+            for attr in attributes.split(';'):
+                key, value = attr.split('=')
+                attr_dict[key] = value
+
+            pepid = attr_dict['protein_id']
+            subid  = re.search(pattern, attr_dict[key_p]).group(1)
+            if pepid in genes:
+                continue
+            genes[pepid] = subid
+
+    with open(output_filename, mode='w', newline='') as output_handle:
+        writer = csv.writer(output_handle)
+        for pepid, subid in genes.items():
+            writer.writerow([pepid, subid])
+
+
+    
+
+
+
+
+            
+
+
