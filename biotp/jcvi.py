@@ -6,7 +6,7 @@ def output_blocks(filename):
         for line in handle:
             blocks = line.strip().split('\t')
             if all(block != '.' for block in blocks):
-                block_dict = {'id': len(blocks_list), 'blocks': blocks}
+                block_dict = {'id': len(blocks_list) + 1, 'blocks': blocks}
                 blocks_list.append(block_dict)
                 print(block_dict['id'], *blocks)
 

@@ -39,6 +39,13 @@ def rename_headers_to_features(input_filename, output_filename, feature):
             record.description = ""
             SeqIO.write(record, output_handle, 'fasta')
 
+def prefix_to_headers(input_filename, output_filename, prefix):
+    with open(input_filename, 'r') as input_handle, open(output_filename, 'w') as output_handle:
+        for record in SeqIO.parse(input_handle, 'fasta'):
+            record.id = f'{prefix}_{record.id}'
+            record.description = f'{prefix}_{record.description}'
+            SeqIO.write(record, output_handle, 'fasta')
+
 def slice_headers_by_ids(input_filename, output_filename, *ids):
     with open(input_filename, 'r') as input_handle, open(output_filename, 'w') as output_handle:
         for record in SeqIO.parse(input_handle, 'fasta'):
