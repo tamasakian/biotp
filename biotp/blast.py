@@ -67,7 +67,7 @@ def slice_rgo_by_hgt(input_filename, output_filename, pct):
             num_ogp = len(qry[q]['ogp_bits'])
             ogp_pct = int(num_ogp) / int(num) * 100
 
-            if ai > 0 and ogp_pct >= pct:
+            if float(ai) > 0 and float(ogp_pct) >= float(pct):
                 for sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore in zip(qry[q]['sseqid'], qry[q]['pident'], qry[q]['length'], qry[q]['mismatch'], qry[q]['gapopen'], qry[q]['qstart'], qry[q]['qend'], qry[q]['sstart'], qry[q]['send'], qry[q]['evalue'], qry[q]['bitscore']):
                     output_handle.write(f"{q}\t{sseqid}\t{pident}\t{length}\t{mismatch}\t{gapopen}\t{qstart}\t{qend}\t{sstart}\t{send}\t{evalue}\t{bitscore}\n")
 
