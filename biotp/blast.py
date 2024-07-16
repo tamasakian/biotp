@@ -60,12 +60,12 @@ def slice_rgo_by_hgt(input_filename, output_filename, pct):
             bbh_rec = max(qry[q]['rec_bits'])
             bbh_grp = max(qry[q]['grp_bits'])
             bbh_ogp = max(qry[q]['ogp_bits'])
-            ai = (bbh_ogp / bbh_rec) - (bbh_grp / bbh_rec)
+            ai = (float(bbh_ogp) / float(bbh_rec)) - (float(bbh_grp) / float(bbh_rec))
 
             ## Percentage of outgroup species
             num = len(qry[q]['bitscore'])
             num_ogp = len(qry[q]['ogp_bits'])
-            ogp_pct = num_ogp / num * 100
+            ogp_pct = int(num_ogp) / int(num) * 100
 
             if ai > 0 and ogp_pct >= pct:
                 for sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore in zip(qry[q]['sseqid'], qry[q]['pident'], qry[q]['length'], qry[q]['mismatch'], qry[q]['gapopen'], qry[q]['qstart'], qry[q]['qend'], qry[q]['sstart'], qry[q]['send'], qry[q]['evalue'], qry[q]['bitscore']):
