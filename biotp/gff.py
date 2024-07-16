@@ -1,5 +1,4 @@
 import csv
-import os
 import re
 
 def slice_lines_by_seqids(input_filename, output_filename, *seqids):
