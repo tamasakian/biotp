@@ -50,16 +50,17 @@ def slice_rgo_by_hgt(input_filename, output_filename, pct):
 
     with open(output_filename, 'w') as output_handle:
         for q in qry:
-            ## exception
-            if not qry[q]['grp_bits']:
-                continue
+            ## Alien Index
             if not qry[q]['ogp_bits']:
                 continue
-
-            ## Alien Index
             bbh_rec = max(qry[q]['rec_bits'])
-            bbh_grp = max(qry[q]['grp_bits'])
             bbh_ogp = max(qry[q]['ogp_bits'])
+
+            if not qry[q]['grp_bits']:
+                bbh_grp = 0
+            else:
+                bbh_grp = max(qry[q]['grp_bits'])
+                
             ai = (float(bbh_ogp) / float(bbh_rec)) - (float(bbh_grp) / float(bbh_rec))
 
             ## Percentage of outgroup species
