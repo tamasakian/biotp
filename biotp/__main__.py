@@ -29,6 +29,7 @@ functions = {
     'rename_header': fasta.rename_header,
     'rename_headers_to_features': fasta.rename_headers_to_features,
     'prefix_to_headers': fasta.prefix_to_headers,
+    'slice_records_by_names': fasta.slice_records_by_names, 
     'slice_headers_by_ids': fasta.slice_headers_by_ids,
     'slice_seq_flanking_region': fasta.slice_seq_flanking_region,
     'slice_seq_upstream_region': fasta.slice_seq_upstream_region,

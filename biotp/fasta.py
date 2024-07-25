@@ -54,6 +54,25 @@ def slice_headers_by_ids(input_filename, output_filename, *ids):
                 continue
             SeqIO.write(record, output_handle, 'fasta')
 
+def slice_records_by_names(input_filename, output_filename, *names):
+    """
+    Slice records by sequence names.
+
+    Parameters
+    ----------
+    input_filename : str
+        Filename of input multi-FASTA file. 
+    output_filename : str
+        Filename of output multi-FASTA file.
+    names : list of str
+        Sequence names to slice.
+    """
+    with open(input_filename, 'r') as input_handle, open(output_filename, 'w') as output_handle:
+        for record in SeqIO.parse(input_handle, 'fasta'):
+            if record.id not in names:
+                continue
+            SeqIO.write(record, output_handle, 'fasta')
+
 def split_multi_into_single(input_filename, output_dirname):
     with open(input_filename, 'r') as input_handle:
         for record in SeqIO.parse(input_handle, 'fasta'):
