@@ -69,8 +69,12 @@ def slice_rgo_by_hgt(input_filename, output_filename, pct):
             ogp_pct = int(num_ogp) / int(num) * 100
 
             if float(ai) > 0 and float(ogp_pct) >= float(pct):
-                for sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore in zip(qry[q]['sseqid'], qry[q]['pident'], qry[q]['length'], qry[q]['mismatch'], qry[q]['gapopen'], qry[q]['qstart'], qry[q]['qend'], qry[q]['sstart'], qry[q]['send'], qry[q]['evalue'], qry[q]['bitscore']):
-                    output_handle.write(f"{q}\t{sseqid}\t{pident}\t{length}\t{mismatch}\t{gapopen}\t{qstart}\t{qend}\t{sstart}\t{send}\t{evalue}\t{bitscore}\n")
+                for sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore in zip(
+                        qry[q]['sseqid'], qry[q]['pident'], qry[q]['length'], qry[q]['mismatch'],
+                        qry[q]['gapopen'], qry[q]['qstart'], qry[q]['qend'], qry[q]['sstart'],
+                        qry[q]['send'], qry[q]['evalue'], qry[q]['bitscore']):
+                    output_handle.write(
+                        f"{q}\t{sseqid}\t{pident}\t{length}\t{mismatch}\t{gapopen}\t{qstart}\t{qend}\t{sstart}\t{send}\t{evalue}\t{bitscore}\n")
 
 
 def detect_hgt(input_filename, output_filename):
