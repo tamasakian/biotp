@@ -125,6 +125,8 @@ def detect_hgt(input_filename, output_filename):
 
     with open(output_filename, 'w') as output_handle:
         for q in qry:
+            if qry[q]['grp_bits']:
+                continue
             if qry[q]['ogp_bits']:
                 for sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore in zip(
                         qry[q]['sseqid'], qry[q]['pident'], qry[q]['length'], qry[q]['mismatch'],
