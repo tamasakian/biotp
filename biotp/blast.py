@@ -45,7 +45,7 @@ def slice_rgo_by_hgt(input_filename, output_filename, pct):
                 qry[qseqid]['rec_bits'].append(bitscore)
             elif sseqid.startswith('grp'):
                 qry[qseqid]['grp_bits'].append(bitscore)
-            else:
+            elif sseqid.startswith('ogp'):
                 qry[qseqid]['ogp_bits'].append(bitscore)
 
     with open(output_filename, 'w') as output_handle:
@@ -120,7 +120,7 @@ def detect_hgt(input_filename, output_filename):
                 qry[qseqid]['rec_bits'].append(bitscore)
             elif sseqid.startswith('grp'):
                 qry[qseqid]['grp_bits'].append(bitscore)
-            else:
+            elif sseqid.startswith('ogp'):
                 qry[qseqid]['ogp_bits'].append(bitscore)
 
     with open(output_filename, 'w') as output_handle:
