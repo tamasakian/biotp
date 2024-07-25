@@ -28,6 +28,7 @@ functions = {
     'output_ids': fasta.output_ids,
     'rename_header': fasta.rename_header,
     'rename_headers_to_features': fasta.rename_headers_to_features,
+    'rename_headers_feature': fasta.rename_headers_feature,
     'prefix_to_headers': fasta.prefix_to_headers,
     'slice_records_by_names': fasta.slice_records_by_names, 
     'slice_headers_by_ids': fasta.slice_headers_by_ids,

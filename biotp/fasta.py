@@ -39,6 +39,34 @@ def rename_headers_to_features(input_filename, output_filename, feature):
             record.description = ""
             SeqIO.write(record, output_handle, 'fasta')
 
+def rename_headers_feature(input_filename, output_filename, feature):
+    """
+    Rename cds names feature name.
+
+    Parameters
+    ----------
+    input_filename : str
+        Filename of input multi-FASTA file [cds]. 
+    output_filename : str
+        Filename of output multi-FASTA file.
+    feature : str
+        Name of feature to rename.
+    """
+    with open(input_filename, 'r') as input_handle, open(output_filename, 'w') as output_handle:
+        for record in SeqIO.parse(input_handle, 'fasta'):
+            match = re.search(r'\[' + feature + r'=([^\]]+)]', record.description)  
+            if not match:
+                match = re.search(r'\[' + feature + r'=([^\]]+)]', record.name)
+                if not match:
+                    match = re.search(r'\[' + feature + r'=([^\]]+)]', record.id)
+                    if not match:
+                        SeqIO.write(record, output_handle, 'fasta')
+                        continue
+            record.id = match.group(1)
+            record.name = ""
+            record.description = ""
+            SeqIO.write(record, output_handle, 'fasta')
+
 def prefix_to_headers(input_filename, output_filename, prefix):
     """
     Prefix to sequence names.
