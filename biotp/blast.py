@@ -246,7 +246,7 @@ def detect_hgt(input_filename, output_filename):
                         f"{q}\t{sseqid}\t{pident}\t{length}\t{mismatch}\t{gapopen}\t{qstart}\t{qend}\t{sstart}\t{send}\t{evalue}\t{bitscore}\n")
 
 
-def slice_results_by_rgo_2(input_filename, output_filename):
+def slice_results_by_rgo_2(input_filename, output_filename, pct):
     qry = {}
 
     with open(input_filename, 'r') as input_handle:
