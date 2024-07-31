@@ -26,6 +26,8 @@ def parse_args():
 functions = {
     'slice_rgo_by_hgt': blast.slice_rgo_by_hgt,
     'detect_hgt': blast.detect_hgt, 
+    'slice_results_by_rgo': blast.slice_results_by_rgo,
+    'slice_results_by_rgo_2': blast.slice_results_by_rgo_2, 
     'output_ids': fasta.output_ids,
     'rename_header': fasta.rename_header,
     'rename_headers_to_features': fasta.rename_headers_to_features,
