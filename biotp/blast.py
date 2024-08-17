@@ -383,8 +383,8 @@ def slice_hits_by_crossover_group(input_filename, output_filename):
                     continue
                 if bbh_ogp is None:
                     continue
-                if grp_bbh is None:
-                    grp_bbh = 0
+                if bbh_grp is None:
+                    bbh_grp = 0
             score = (bbh_ogp - bbh_grp) / bbh_sgp * 100
             if score < 0:
                 continue
