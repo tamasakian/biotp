@@ -339,7 +339,7 @@ def slice_results_by_rgo_2(input_filename, output_filename, pct):
                         f"{q}\t{sseqid}\t{pident}\t{length}\t{mismatch}\t{gapopen}\t{qstart}\t{qend}\t{sstart}\t{send}\t{evalue}\t{bitscore}\n")
                     
 
-def slice_hits_by_crossover_group(input_filename, output_filename):
+def slice_hits_by_crossover_group(input_filename: str, output_filename: str) -> None:
     """Slice BLAST hits by crossover group
 
     Args
@@ -370,6 +370,7 @@ def slice_hits_by_crossover_group(input_filename, output_filename):
                 bbh_sgp = bbh_grp = bbh_ogp = None
                 for li in hits[key]:
                     qseq, sseq, iden, leng, mis, gap, qsta, qend, ssta, send, evl, bit = li
+                    bit = float(bit)
                     if sseq.startswith("sgp"):
                         if bbh_sgp is None or bit > bbh_sgp:
                             bbh_sgp = bit
