@@ -337,4 +337,60 @@ def slice_results_by_rgo_2(input_filename, output_filename, pct):
                         qry[q]['evalue'], qry[q]['bitscore']):
                     output_handle.write(
                         f"{q}\t{sseqid}\t{pident}\t{length}\t{mismatch}\t{gapopen}\t{qstart}\t{qend}\t{sstart}\t{send}\t{evalue}\t{bitscore}\n")
+                    
+
+def slice_hits_by_crossover_group(input_filename, output_filename):
+    """Slice BLAST hits by crossover group
+
+    Args
+    ----
+    input_filename : str
+        Input filename.
+    output_filename : str
+        Output filename.
+    
+    """
+    hits = {}
+
+    with open(input_filename, "r") as input_handle:
+        for line in input_handle:
+            if line.startswith("#"):
+                continue
+            li = line.strip().split("\t")
+            if len(li) != 12:
+                continue
+            qseq, sseq, iden, leng, mis, gap, qsta, qend, ssta, send, evl, bit = li
+            if qseq not in hits:
+                hits[qseq] = []
+            hits[qseq].append(li)
+
+    with open(output_filename, "w") as output_handle:
+        for key in hits:
+            if key.startswith("sgp"):
+                bbh_sgp = bbh_grp = bbh_ogp = None
+                for li in hits[key]:
+                    qseq, sseq, iden, leng, mis, gap, qsta, qend, ssta, send, evl, bit = li
+                    if sseq.startswith("sgp"):
+                        if bbh_sgp is None or bit > bbh_sgp:
+                            bbh_sgp = bit
+                    elif sseq.startswith("grp"):
+                        if bbh_grp is None or bit > bbh_grp:
+                            bbh_grp = bit
+                    elif sseq.startswith("ogp"):
+                        if bbh_ogp is None or bit > bbh_ogp:
+                            bbh_ogp = bit
+                if bbh_sgp is None:
+                    continue
+                if bbh_ogp is None:
+                    continue
+                if grp_bbh is None:
+                    grp_bbh = 0
+            score = (bbh_ogp - bbh_grp) / bbh_sgp * 100
+            if score < 0:
+                continue
+            output_handle.write(f"# {key} : {score}\n")
+            for li in hits[key]:
+                output_handle.write("\t".join(li) + "\n")
+
+
 
