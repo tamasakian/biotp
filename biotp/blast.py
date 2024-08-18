@@ -393,7 +393,7 @@ def slice_hits_by_crossover_group(input_filename: str, output_filename: str) -> 
                     output_handle.write("\t".join(li) + "\n")
 
 def output_besthit_for_subgroup(input_filename: str, output_filename: str) -> None:
-    """Slice BLAST hits by crossover group
+    """Output besthit for subgroup
 
     Args
     ----
@@ -421,9 +421,17 @@ def output_besthit_for_subgroup(input_filename: str, output_filename: str) -> No
         for key in hits:
             if key.startswith("sgp"):
                 bbh_sgp = bbh_grp = bbh_ogp = None
+                bbh = besthit = None
                 for li in hits[key]:
                     qseqid, sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore = li
                     bitscore = float(bitscore)
+                ##-- identify besthit --##
+                    if sseqid.startswith("grp") or sseqid.startswith("ogp"):
+                        if bbh is None or bitscore > bbh:
+                            bbh = bitscore
+                            besthit = sseqid
+
+                ##-- calculate score --##
                     if sseqid.startswith("sgp"):
                         if bbh_sgp is None or bitscore > bbh_sgp:
                             bbh_sgp = bitscore
@@ -436,14 +444,12 @@ def output_besthit_for_subgroup(input_filename: str, output_filename: str) -> No
                 if bbh_sgp is None:
                     continue
                 if bbh_ogp is None:
-                    continue
+                    bbh_ogp = 0
                 if bbh_grp is None:
                     bbh_grp = 0
-            score = (bbh_ogp - bbh_grp) / bbh_sgp
-            if score < 0:
-                continue
-            for li in hits[key]:
-                output_handle.write("\t".join(li) + "\n")
+                score = (bbh_ogp - bbh_grp) / bbh_sgp
+
+                output_handle.write(f"{key}\t{besthit}\t{score}\n")
 
 
 

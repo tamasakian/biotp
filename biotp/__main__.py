@@ -29,6 +29,7 @@ functions = {
     'slice_results_by_rgo': blast.slice_results_by_rgo,
     'slice_results_by_rgo_2': blast.slice_results_by_rgo_2, 
     'slice_hits_by_crossover_group': blast.slice_hits_by_crossover_group,
+    'output_besthit_for_subgroup': blast.output_besthit_for_subgroup,
     'output_ids': fasta.output_ids,
     'rename_header': fasta.rename_header,
     'rename_headers_to_features': fasta.rename_headers_to_features,
