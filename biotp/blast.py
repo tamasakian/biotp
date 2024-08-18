@@ -386,6 +386,59 @@ def slice_hits_by_crossover_group(input_filename: str, output_filename: str) -> 
                     continue
                 if bbh_grp is None:
                     bbh_grp = 0
+                score = (bbh_ogp - bbh_grp) / bbh_sgp
+                if score < 0:
+                    continue
+                for li in hits[key]:
+                    output_handle.write("\t".join(li) + "\n")
+
+def output_besthit_for_subgroup(input_filename: str, output_filename: str) -> None:
+    """Slice BLAST hits by crossover group
+
+    Args
+    ----
+    input_filename : str
+        Input filename.
+    output_filename : str
+        Output filename.
+    
+    """
+    hits = {}
+
+    with open(input_filename, "r") as input_handle:
+        for line in input_handle:
+            if line.startswith("#"):
+                continue
+            li = line.strip().split("\t")
+            if len(li) != 12:
+                continue
+            qseqid, sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore = li
+            if qseqid not in hits:
+                hits[qseqid] = []
+            hits[qseqid].append(li)
+
+    with open(output_filename, "w") as output_handle:
+        for key in hits:
+            if key.startswith("sgp"):
+                bbh_sgp = bbh_grp = bbh_ogp = None
+                for li in hits[key]:
+                    qseqid, sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore = li
+                    bitscore = float(bitscore)
+                    if sseqid.startswith("sgp"):
+                        if bbh_sgp is None or bitscore > bbh_sgp:
+                            bbh_sgp = bitscore
+                    elif sseqid.startswith("grp"):
+                        if bbh_grp is None or bitscore > bbh_grp:
+                            bbh_grp = bitscore
+                    elif sseqid.startswith("ogp"):
+                        if bbh_ogp is None or bitscore > bbh_ogp:
+                            bbh_ogp = bitscore
+                if bbh_sgp is None:
+                    continue
+                if bbh_ogp is None:
+                    continue
+                if bbh_grp is None:
+                    bbh_grp = 0
             score = (bbh_ogp - bbh_grp) / bbh_sgp
             if score < 0:
                 continue
