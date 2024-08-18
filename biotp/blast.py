@@ -359,27 +359,27 @@ def slice_hits_by_crossover_group(input_filename: str, output_filename: str) -> 
             li = line.strip().split("\t")
             if len(li) != 12:
                 continue
-            qseq, sseq, iden, leng, mis, gap, qsta, qend, ssta, send, evl, bit = li
-            if qseq not in hits:
-                hits[qseq] = []
-            hits[qseq].append(li)
+            qseqid, sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore = li
+            if qseqid not in hits:
+                hits[qseqid] = []
+            hits[qseqid].append(li)
 
     with open(output_filename, "w") as output_handle:
         for key in hits:
             if key.startswith("sgp"):
                 bbh_sgp = bbh_grp = bbh_ogp = None
                 for li in hits[key]:
-                    qseq, sseq, iden, leng, mis, gap, qsta, qend, ssta, send, evl, bit = li
-                    bit = float(bit)
-                    if sseq.startswith("sgp"):
-                        if bbh_sgp is None or bit > bbh_sgp:
-                            bbh_sgp = bit
-                    elif sseq.startswith("grp"):
-                        if bbh_grp is None or bit > bbh_grp:
-                            bbh_grp = bit
-                    elif sseq.startswith("ogp"):
-                        if bbh_ogp is None or bit > bbh_ogp:
-                            bbh_ogp = bit
+                    qseqid, sseqid, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore = li
+                    bitscore = float(bitscore)
+                    if sseqid.startswith("sgp"):
+                        if bbh_sgp is None or bitscore > bbh_sgp:
+                            bbh_sgp = bitscore
+                    elif sseqid.startswith("grp"):
+                        if bbh_grp is None or bitscore > bbh_grp:
+                            bbh_grp = bitscore
+                    elif sseqid.startswith("ogp"):
+                        if bbh_ogp is None or bitscore > bbh_ogp:
+                            bbh_ogp = bitscore
                 if bbh_sgp is None:
                     continue
                 if bbh_ogp is None:
@@ -389,7 +389,7 @@ def slice_hits_by_crossover_group(input_filename: str, output_filename: str) -> 
             score = (bbh_ogp - bbh_grp) / bbh_sgp * 100
             if score < 0:
                 continue
-            output_handle.write(f"# {key} : {score}\n")
+            output_handle.write(f"#\t{key}\t{score}\n")
             for li in hits[key]:
                 output_handle.write("\t".join(li) + "\n")
 
