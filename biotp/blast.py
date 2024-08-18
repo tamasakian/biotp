@@ -386,10 +386,9 @@ def slice_hits_by_crossover_group(input_filename: str, output_filename: str) -> 
                     continue
                 if bbh_grp is None:
                     bbh_grp = 0
-            score = (bbh_ogp - bbh_grp) / bbh_sgp * 100
+            score = (bbh_ogp - bbh_grp) / bbh_sgp
             if score < 0:
                 continue
-            output_handle.write(f"#\t{key}\t{score}\n")
             for li in hits[key]:
                 output_handle.write("\t".join(li) + "\n")
 
