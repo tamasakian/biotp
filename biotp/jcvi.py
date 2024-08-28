@@ -70,9 +70,10 @@ def output_besthit_one_to_two_microsynteny(refbed, qrybed, blocks_filename, anch
         with open(bed, 'r') as handle:
             for line in handle: 
                 li = line.strip().split('\t')
-                gene = li[3]
-                seqid = li[0]
-                gene_dict[gene] = seqid
+                if len(li) != 6:
+                    continue
+                seqid, start, end, name, score, strand = li
+                gene_dict[name] = seqid
 
     ref_blocks = []
     with open(blocks_filename, 'r') as handle:
@@ -93,6 +94,47 @@ def output_besthit_one_to_two_microsynteny(refbed, qrybed, blocks_filename, anch
     # df_seqids = df_anchors_filtered_besthit.copy()
     # df_seqids['besthit'] = df_anchors_filtered_besthit['qry'].map(gene_dict)
     # df_seqids.to_csv(output_filename, header=['ref', 'qry', 'bits', 'besthit'])
+
+def output_besthit_one_to_two_synteny(refbed, qrybed, blocks_filename, anchors_filename, output_filename):
+    gene_dict = {}
+    for bed in [refbed, qrybed]:
+        with open(bed, 'r') as handle:
+            for line in handle: 
+                li = line.strip().split('\t')
+                if len(li) != 6:
+                    continue
+                seqid, start, end, name, score, strand = li
+                gene_dict[name] = seqid
+
+    refs = []
+    with open(blocks_filename, 'r') as handle:
+        for line in handle:
+            li = line.strip().split('\t')
+            if len(li) != 3:
+                continue
+            ref, qry1, qry2 = li
+            if ref == "." or qry1 == "." or qry2 == ".":
+                continue
+            refs.append(ref)
+
+    hits = []
+    with open(anchors_filename, 'r') as handle:
+        for line in handle:
+            li = line.strip().split('\t')
+            if len(li) != 3:
+                continue
+            ref, qry, bits = li
+            bits = float(bits)
+            if ref not in refs:
+                continue
+            hits.append((ref, qry, bits))
+
+    with open(output_filename, 'w') as outfile:
+        outfile.write("ref_seq\tref\tqry_seq\tqry\tbits\n") 
+        for ref, qry, bits in hits:
+            ref_seq = gene_dict[ref]
+            qry_seq = gene_dict[qry]
+            outfile.write(f"{ref_seq}\t{ref}\t{qry_seq}\t{qry}\t{bits}\n")
 
 
 

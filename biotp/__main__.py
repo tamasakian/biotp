@@ -52,6 +52,7 @@ functions = {
     'output_longest_one_to_two_microsynteny': jcvi.output_longest_one_to_two_microsynteny,
     'output_longest_one_to_three_microsynteny': jcvi.output_longest_one_to_three_microsynteny,
     'output_besthit_one_to_two_microsynteny': jcvi.output_besthit_one_to_two_microsynteny,
+    "output_besthit_one_to_two_synteny": jcvi.output_besthit_one_to_two_synteny, 
     'output_acc_org_asm': json.output_acc_org_asm
 }
 
