@@ -1,6 +1,16 @@
 import csv
 import re
 
+#!/usr/bin/env python3
+
+"""Library for processing GFF3 files.
+
+Functions
+---------
+generate_introns: Generate all introns.
+
+"""
+
 def slice_lines_by_seqids(input_filename, output_filename, *seqids):
     with open(input_filename, mode='r') as input_handle, open(output_filename, 'w') as output_handle:
         for line in input_handle:
@@ -139,6 +149,51 @@ def generate_coordinate_all_introns(input_filename, output_filename):
                         intron_id = f"{protein_id}_intron_{intron_count}"
                         output_handle.write(f"{gene_info['seq']}\t{gene_info['src']}\tintron\t{intron_start}\t{intron_end}\t.\t{gene_info['strand']}\t.\tprotein_id={protein_id};intron_id={intron_id}\n")
                         intron_count += 1
+
+def generate_introns(input_filename: str, output_filename: str):
+    """Generate all introns.
+
+    Args
+    ----
+    input_filename : str
+        Input filename.
+    output_filename : str
+        Output filename.
+    
+    """
+    proteins = {}
+    with open(input_filename, "r") as input_handle:
+        for line in input_handle:
+            if line.startswith("#"):
+                continue
+            li = line.strip().split("\t")
+            if len(li) != 9:
+                continue
+            seqid, src, kind, start, end, score, strand, phase, attributes = li
+
+            if kind != "CDS":
+                continue
+            start, end = int(start), int(end)
+
+            attr_dict = {}
+            for attr in attributes.split(";"):
+                key, value = attr.split("=")
+                attr_dict[key] = value
+            key = attr_dict["protein_id"]
+            if key not in proteins:
+                proteins[key] = {"seqid": seqid, "src": src, "strand": strand, "coordinates": []}
+            proteins[key]["coordinates"].append((start, end))
+
+    with open(output_filename, "w") as output_handle:
+        for key, value in proteins.items():
+            exons = sorted(value["coordinates"])
+            count = 1
+            for i in range(len(exons) - 1):
+                start = exons[i][1] + 1
+                end = exons[i+1][0] - 1
+                intron_id = f"{key}_intron_{count}"
+                output_handle.write(f'{value["seqid"]}\t{value["src"]}\tintron\t{start}\t{end}\t.\t{value["strand"]}\t.\tprotein_id={key};intron_id={intron_id}\n')
+                count += 1
 
 def make_dict_pepid(input_filename, output_filename, kind_p, key_p, pattern):
     genes = {}
