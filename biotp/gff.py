@@ -150,7 +150,7 @@ def generate_coordinate_all_introns(input_filename, output_filename):
                         output_handle.write(f"{gene_info['seq']}\t{gene_info['src']}\tintron\t{intron_start}\t{intron_end}\t.\t{gene_info['strand']}\t.\tprotein_id={protein_id};intron_id={intron_id}\n")
                         intron_count += 1
 
-def generate_introns(input_filename: str, output_filename: str):
+def generate_introns(input_filename: str, output_filename: str) -> None:
     """Generate all introns.
 
     Args
