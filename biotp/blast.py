@@ -448,8 +448,8 @@ def output_besthit_for_subgroup(input_filename: str, output_filename: str) -> No
                 if bbh_grp is None:
                     bbh_grp = 0
                 score = (bbh_ogp - bbh_grp) / bbh_sgp
-
-                output_handle.write(f"{key}\t{besthit}\t{score}\n")
+                if score > 0:
+                    output_handle.write(f"{key}\t{besthit}\t{score}\n")
 
 
 
