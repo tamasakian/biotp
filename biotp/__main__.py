@@ -4,6 +4,7 @@ import sys
 from biotp import blast
 from biotp import fasta
 from biotp import gff
+from biotp import gff3
 from biotp import jcvi
 from biotp import json
 
@@ -48,6 +49,7 @@ functions = {
     'generate_coordinate_all_introns': gff.generate_coordinate_all_introns,
     "generate_introns": gff.generate_introns, 
     'make_dict_pepid': gff.make_dict_pepid,
+    "output_seqid_strand_locs_by_gene_id": gff3.output_seqid_strand_locs_by_gene_id, 
     'output_blocks': jcvi.output_blocks,
     'output_longest_one_to_one_microsynteny': jcvi.output_longest_one_to_one_microsynteny,
     'output_longest_one_to_two_microsynteny': jcvi.output_longest_one_to_two_microsynteny,
