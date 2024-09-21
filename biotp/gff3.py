@@ -8,7 +8,6 @@ output_seqid_strand_locs_by_gene_id: Output seqid, strand, start, and end by par
 
 """
 
-
 def output_seqid_strand_locs_by_gene_id(filename, gene_id):
     """Output seqid, strand, start, and end by partial match of gene id.
 
@@ -20,7 +19,7 @@ def output_seqid_strand_locs_by_gene_id(filename, gene_id):
         Input gene ID.
 
     """
-    seqids, strands, locs = []
+    seqids, strands, locs = [], [], []
     with open(filename, "r") as input_handle:
         for line in input_handle:
             if line.startswith("#"):
