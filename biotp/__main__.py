@@ -50,6 +50,7 @@ functions = {
     "generate_introns": gff.generate_introns, 
     'make_dict_pepid': gff.make_dict_pepid,
     "output_seqid_strand_locs_by_gene_id": gff3.output_seqid_strand_locs_by_gene_id, 
+    "generate_upstream_regions": gff3.generate_upstream_regions, 
     'output_blocks': jcvi.output_blocks,
     'output_longest_one_to_one_microsynteny': jcvi.output_longest_one_to_one_microsynteny,
     'output_longest_one_to_two_microsynteny': jcvi.output_longest_one_to_two_microsynteny,

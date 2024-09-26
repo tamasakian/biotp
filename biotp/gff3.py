@@ -5,6 +5,7 @@
 Functions
 ---------
 output_seqid_strand_locs_by_gene_id: Output seqid, strand, start, and end by partial match of gene id.
+generate_upstream_regions: Generate upstream sequences for genes.
 
 """
 
