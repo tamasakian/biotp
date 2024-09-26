@@ -179,10 +179,12 @@ def generate_introns(input_filename: str, output_filename: str) -> None:
             for attr in attributes.split(";"):
                 key, value = attr.split("=")
                 attr_dict[key] = value
-            key = attr_dict["protein_id"]
-            if key not in proteins:
-                proteins[key] = {"seqid": seqid, "src": src, "strand": strand, "coordinates": []}
-            proteins[key]["coordinates"].append((start, end))
+            if "protein_id" not in attr_dict:
+                continue
+            p = attr_dict["protein_id"]
+            if p not in proteins:
+                proteins[p] = {"seqid": seqid, "src": src, "strand": strand, "coordinates": []}
+            proteins[p]["coordinates"].append((start, end))
 
     with open(output_filename, "w") as output_handle:
         for key, value in proteins.items():
