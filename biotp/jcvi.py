@@ -137,5 +137,67 @@ def output_besthit_one_to_two_synteny(refbed, qrybed, blocks_filename, anchors_f
             outfile.write(f"{ref_seq}\t{ref}\t{qry_seq}\t{qry}\t{bits}\n")
 
 
+# def rename_to_protein_id(input_filename: str, output_filename: str, input_gff1: str, input_gff2: str, input_tag: str) -> None:
+#     """Rename to protein_id.
+
+#     Args
+#     ----
+#     input_filename : str
+#         Input blocks filename.
+#     output_filename : str
+#         Output blocks filename.
+#     input_gff1 : str
+#         Input GFF3 filename.
+#     input_gff2 : str
+#         Input GFF3 filename.
+#     input_tag : str
+#         The tags that make up the blocks.
+
+#     """
+
+#     block_dict = {}
+#     with open(input_gff1, mode="r") as gff1_handle:
+#         for line in gff1_handle:
+#             li = line.strip().split("\t")
+#             if len(li) == 9:
+#                 seqid, src, kind, start, end, score, strand, phase, attributes = li
+#                 if kind != "CDS":
+#                     continue
+#                 attr_dict = {}
+#                 for attr in attributes.split(";"):
+#                     key, value = attr.split("=")
+#                     attr_dict[key] = value
+#                 if "protein_id" not in attr_dict and input_tag not in attr_dict:
+#                     continue
+#                 block_key   = attr_dict[input_tag]
+#                 block_value = attr_dict["protein_id"]
+#                 if block_dict[block_key]:
+#                     continue
+#                 block_dict[block_key] = block_value
+
+#     with open(input_gff2, mode="r") as gff2_handle:
+#         for line in gff2_handle:
+#             li = line.strip().split("\t")
+#             if len(li) == 9:
+#                 seqid, src, kind, start, end, score, strand, phase, attributes = li
+#                 if kind != "CDS":
+#                     continue
+#                 attr_dict = {}
+#                 for attr in attributes.split(";"):
+#                     key, value = attr.split("=")
+#                     attr_dict[key] = value
+#                 if "protein_id" not in attr_dict:
+#                     continue
+#                 if input_tag not in attr_dict:
+#                     continue
+#                 block_key   = attr_dict[input_tag]
+#                 block_value = attr_dict["protein_id"]
+#                 if block_dict[block_key]:
+#                     continue
+#                 block_dict[block_key] = block_value
+
+#     with open(input_filename, mode="r") as input_handle, open(output_filename, mode="w") as output_handle:
+#         for line in input_handle:
+
 
     
