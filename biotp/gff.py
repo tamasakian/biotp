@@ -213,8 +213,8 @@ def make_dict_pepid(input_filename, output_filename, kind_p, key_p, pattern):
 
             attr_dict = {}
             for attr in attributes.split(';'):
-                key, value = attr.split('=')
-                attr_dict[key] = value
+                k, v = attr.split('=')
+                attr_dict[k] = v
 
             pepid = attr_dict['protein_id']
             subid  = re.search(pattern, attr_dict[key_p]).group(1)
