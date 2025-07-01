@@ -43,7 +43,7 @@ def parse_spo_table(spo_file: str) -> dict:
             if line.startswith("#") or not line:
                 continue
             li = line.split("\t")
-            spo_name = f"SP{li[0]}"
+            spo_name = f"SP:{li[0]}"
             for l in li[1:]:
                 gene_ids = l.split(",")
                 gene_ids = {gene.strip() for gene in gene_ids}
@@ -73,10 +73,10 @@ def annotate_tree_mso_spo(input_file: str, output_file: str, mso: str, spo: str)
         ms_hits = [ms for ms, genes in mso_dict.items() if leaf_name in genes]
         sp_hits = [sp for sp, genes in spo_dict.items() if leaf_name in genes]
 
-        mso_label = ms_hits[0] if ms_hits else "MS-NA"
-        spo_label = sp_hits[0] if sp_hits else "SP-NA"
+        mso_label = ms_hits[0] if ms_hits else "MS:NA"
+        spo_label = sp_hits[0] if sp_hits else "SP:NA"
 
-        leaf.name = f"{leaf_name}[{mso_label}+{spo_label}]"
+        leaf.name = f"{leaf_name} | {mso_label} | {spo_label}"
 
     Phylo.write(tree, output_file, format="newick")
     print(f"[INFO] Annotated tree saved to {output_file}")
