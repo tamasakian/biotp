@@ -8,25 +8,36 @@ def extract_protein_by_entry(input_file: str, output_file: str, *entry: str) -> 
         entry:       Pfam entry to filter.
 
     """
+    MIN_SCORE = 30
     if not entry:
         raise ValueError("[ERROR] No Pfam entry provided.")
 
     # Initialize a dictionary to hold unique proteins for each entry
     entry2protein = {e: set() for e in entry}
 
-    with open(input_file, "r") as input_handle:
+    with open(input_file, mode="r") as input_handle:
         for line in input_handle:
             if line.startswith("#") or not line.strip():
                 continue
 
             columns = line.split()
+            if len(columns) < 14:
+                continue
 
-            if len(columns) >= 4:
-                pfam = columns[1]
-                protein_name = columns[3]
+            pfam = columns[1]
+            protein_name = columns[3]
 
-                if pfam in entry2protein:
-                    entry2protein[pfam].add(protein_name)
+            try:
+                domain_score = float(columns[13])
+            except ValueError:
+                print(f"[WARNING] Invalid score '{columns[13]}' for protein '{protein_name}'. Skipping.")
+                continue
+
+            if pfam in entry2protein and domain_score >= MIN_SCORE:
+                entry2protein[pfam].add(protein_name)
+
+    if any(len(proteins) == 0 for proteins in entry2protein.values()):
+        print("[WARNING] One or more Pfam entries have zero proteins after filtering.")
 
     common_proteins = set.intersection(*entry2protein.values())
 
