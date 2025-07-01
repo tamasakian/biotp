@@ -62,7 +62,7 @@ functions = {
     "output_besthit_one_to_two_synteny": jcvi.output_besthit_one_to_two_synteny,
     "output_acc_org_asm": json.output_acc_org_asm,
     "extract_protein_by_entry": pfam.extract_protein_by_entry,
-    "annotate_tree_mso_spo", newick.annotate_tree_mso_spo,
+    "annotate_tree_mso_spo": newick.annotate_tree_mso_spo,
 }
 
 if __name__ == "__main__":
