@@ -80,3 +80,18 @@ def annotate_tree_mso_spo(input_file: str, output_file: str, mso: str, spo: str)
 
     Phylo.write(tree, output_file, format="newick")
     print(f"[INFO] Annotated tree saved to {output_file}")
+
+
+def clean_leaf_names(tree_str: str) -> str:
+    """
+    Clean leaf names in a Newick tree string by replacing spaces with underscores.
+    Args:
+        tree_str: Newick tree string.
+    """
+    pattern = r'([\w\s]+?)\s*-\s*\d+:\d+\[&&NHX:[^\]]+\]'
+
+    def replacer(match):
+        species = match.group(1)
+        return species.replace(" ", "_")
+
+    return re.sub(pattern, replacer, tree_str)
