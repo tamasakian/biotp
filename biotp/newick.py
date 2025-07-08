@@ -94,4 +94,5 @@ def clean_leaf_names(tree_str: str) -> str:
         species = match.group(1)
         return species.replace(" ", "_")
 
-    return re.sub(pattern, replacer, tree_str)
+    tree_str = re.sub(pattern, replacer, tree_str)
+    print(tree_str)
