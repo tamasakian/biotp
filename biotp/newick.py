@@ -105,17 +105,16 @@ def clean_newick_tree(infile: str, outfile: str):
         infile:  Input Newick tree file.
         outfile: Output Newick tree file.
     """
-    def extract_species(name: str) -> str:
-        match = re.match(r'^([\w\s]+?)\s*-\s*\d+:\d+', name)
-        if match:
-            return match.group(1).strip().replace(" ", "_")
-        return name.strip().replace(" ", "_")
+    pattern = r'([\w\s]+?)\s*-\s*\d+:\d+\[&&NHX:[^\]]+\]'
+    def replacer(match):
+        species = match.group(1)
+        return species.replace(" ", "_")
 
     tree = Phylo.read(infile, "newick")
 
     for clade in tree.find_clades():
         if clade.is_terminal():
-            clade.name = extract_species(clade.name or "")
+            clade.name = re.sub(pattern, replacer, clade.name) if clade.name else None
         else:
             clade.name = None
 
