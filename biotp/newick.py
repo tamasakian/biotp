@@ -82,40 +82,19 @@ def annotate_tree_mso_spo(input_file: str, output_file: str, mso: str, spo: str)
     print(f"[INFO] Annotated tree saved to {output_file}")
 
 
+
 def clean_leaf_names(tree_str: str) -> str:
-    """
-    Clean leaf names in a Newick tree string by replacing spaces with underscores.
+    """ Clean leaf names in a Newick tree string.
     Args:
         tree_str: Newick tree string.
+    Returns:
+        str: Cleaned Newick tree string with leaf names formatted.
     """
-    pattern = r'([\w\s]+?)\s*-\s*\d+:\d+\[&&NHX:[^\]]+\]'
-
-    def replacer(match):
-        species = match.group(1)
-        return species.replace(" ", "_")
-
-    tree_str = re.sub(pattern, replacer, tree_str)
+    def leaf_name_replacer(match):
+        return match.group(1).replace(" ", "_")
+    tree_str = re.sub(r'([\w\s]+)(?=[:\)\,])', leaf_name_replacer, tree_str)
+    tree_str = re.sub(r':[\d\.Ee+\-]+(\[&&NHX:[^\]]+\])?', '', tree_str)
+    tree_str = re.sub(r'\)([^,\);]+)(?=[,)\;])', r')', tree_str)
+    tree_str = re.sub(r'\s-\_\d+', '', tree_str)
+    tree_str = re.sub(r'([\w\s]+)(?=[,)\;])', leaf_name_replacer, tree_str)
     print(tree_str)
-
-def clean_newick_tree(infile: str, outfile: str):
-    """
-    This function reads a Newick tree from `infile`, replaces spaces in leaf names with underscores,
-    and writes the modified tree to `outfile`.
-    Args:
-        infile:  Input Newick tree file.
-        outfile: Output Newick tree file.
-    """
-    pattern = r'([\w\s]+?)\s*-\s*\d+:\d+\[&&NHX:[^\]]+\]'
-    def replacer(match):
-        species = match.group(1)
-        return species.replace(" ", "_")
-
-    tree = Phylo.read(infile, "newick")
-
-    for clade in tree.find_clades():
-        if clade.is_terminal():
-            clade.name = re.sub(pattern, replacer, clade.name) if clade.name else None
-        else:
-            clade.name = None
-
-    Phylo.write(tree, outfile, "newick")
