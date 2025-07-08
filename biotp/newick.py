@@ -96,3 +96,27 @@ def clean_leaf_names(tree_str: str) -> str:
 
     tree_str = re.sub(pattern, replacer, tree_str)
     print(tree_str)
+
+def clean_newick_tree(infile: str, outfile: str):
+    """
+    This function reads a Newick tree from `infile`, replaces spaces in leaf names with underscores,
+    and writes the modified tree to `outfile`.
+    Args:
+        infile:  Input Newick tree file.
+        outfile: Output Newick tree file.
+    """
+    def extract_species(name: str) -> str:
+        match = re.match(r'^([\w\s]+?)\s*-\s*\d+:\d+', name)
+        if match:
+            return match.group(1).strip().replace(" ", "_")
+        return name.strip().replace(" ", "_")
+
+    tree = Phylo.read(infile, "newick")
+
+    for clade in tree.find_clades():
+        if clade.is_terminal():
+            clade.name = extract_species(clade.name or "")
+        else:
+            clade.name = None
+
+    Phylo.write(tree, outfile, "newick")
