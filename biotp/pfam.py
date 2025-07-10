@@ -26,12 +26,6 @@ def extract_protein_by_entry(input_file: str, output_file: str, *entry: str) -> 
             pfam = columns[1]
             protein_name = columns[3]
 
-            try:
-                domain_score = float(columns[13])
-            except ValueError:
-                print(f"[WARNING] Invalid score '{columns[13]}' for protein '{protein_name}'. Skipping.")
-                continue
-
             if pfam in entry2protein:
                 entry2protein[pfam].add(protein_name)
 
