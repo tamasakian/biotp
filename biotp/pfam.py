@@ -8,7 +8,6 @@ def extract_protein_by_entry(input_file: str, output_file: str, *entry: str) -> 
         entry:       Pfam entry to filter.
 
     """
-    MIN_SCORE = 30
     if not entry:
         raise ValueError("[ERROR] No Pfam entry provided.")
 
@@ -33,7 +32,7 @@ def extract_protein_by_entry(input_file: str, output_file: str, *entry: str) -> 
                 print(f"[WARNING] Invalid score '{columns[13]}' for protein '{protein_name}'. Skipping.")
                 continue
 
-            if pfam in entry2protein and domain_score >= MIN_SCORE:
+            if pfam in entry2protein:
                 entry2protein[pfam].add(protein_name)
 
     if any(len(proteins) == 0 for proteins in entry2protein.values()):
