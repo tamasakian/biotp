@@ -98,3 +98,29 @@ def clean_leaf_names(tree_str: str) -> str:
     tree_str = re.sub(r'\s-\_\d+', '', tree_str)
     tree_str = re.sub(r'([\w\s]+)(?=[,)\;])', leaf_name_replacer, tree_str)
     print(tree_str)
+
+
+def clean_tip_label(input_file: str, output_file: str) -> None:
+    """
+    Clean tip labels in a Newick tree file by replacing spaces with underscores,
+    removing branch lengths and NHX tags, and cleaning up any trailing names.
+
+    Args:
+        input_file: Path to the input Newick tree file.
+        output_file: Path to the output file to write the cleaned tree.
+    """
+    def leaf_name_replacer(match):
+        return match.group(1).replace(" ", "_")
+
+    with open(input_file, mode="r") as input_handle:
+        tree_str = input_handle.read()
+
+
+    tree_str = re.sub(r'([\w\s]+)(?=[:\)\,])', leaf_name_replacer, tree_str)
+    tree_str = re.sub(r':[\d\.Ee+\-]+(\[&&NHX:[^\]]+\])?', '', tree_str)
+    tree_str = re.sub(r'\)([^,\);]+)(?=[,)\;])', r')', tree_str)
+    tree_str = re.sub(r'\s-\_\d+', '', tree_str)
+    tree_str = re.sub(r'([\w\s]+)(?=[,)\;])', leaf_name_replacer, tree_str)
+
+    with open(output_file, mode="w") as output_handle:
+        output_handle.write(tree_str)

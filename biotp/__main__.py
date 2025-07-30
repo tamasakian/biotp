@@ -64,6 +64,7 @@ functions = {
     "extract_protein_by_entry": pfam.extract_protein_by_entry,
     "annotate_tree_mso_spo": newick.annotate_tree_mso_spo,
     "clean_leaf_names": newick.clean_leaf_names,
+    "clean_tip_label": newick.clean_tip_label,
 }
 
 if __name__ == "__main__":
